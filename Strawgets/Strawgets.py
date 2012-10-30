@@ -53,8 +53,9 @@ class SimpleInterfaceKit888(object):
 
     def _cb_handler(self, caller):
         if self._cb:
-            changed = self._oldstate ^ self.getInputs()
-            self._oldstate ^ changed
+            newstate = self.getInputs()
+            changed = self._oldstate ^ newstate 
+            self._oldstate = newstate
             for mask, cb in self._cb.iteritems():
                 if changed & mask:
                     cb(caller)
@@ -64,9 +65,11 @@ class SimpleInterfaceKit888(object):
         """
         get all Inputs as a integer
         """
+        
         out = 0
         for i in range(8):
-            out += self.kit.getInputState(i)<<i
+            d = self.kit.getInputState(i)
+            out += d<<i
         return out
 
 
