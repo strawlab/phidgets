@@ -4,8 +4,10 @@ Some Phidgets Wrappers
 
 import collections
 import sys
+import time
 
 import Phidgets.Devices.InterfaceKit
+import Phidgets.Devices.Stepper
 import Phidgets.PhidgetException
 
 
@@ -94,6 +96,75 @@ class SimpleInterfaceKit888(object):
         self._cb[mask] = func
 
 
+class SyringeStepper(object):
+
+    def __init__(self, serial=267333, debug=False):
+        self._debug = bool(debug)
+
+        self.stp = self._connect_phidget(serial)
+        # callbacks are stored here
+        #self._cb = collections.OrderedDict()
+        # connect callbacks
+        self.setup_motor()
+
+        self.maxpos = 8600
+
+        self.calibrate()
+
+    def _connect_phidget(self, serial): #, host): not used yet
+        # open and load the Phidget InterfaceKit
+        try:
+            stp = Phidgets.Devices.Stepper.Stepper()
+            stp.openPhidget(serial)
+        except RuntimeError, Phidgets.PhidgetException.PhidgetException:
+            raise
+        # wait for the device to attach
+        try:
+            stp.waitForAttach(2000)
+        except Phidgets.PhidgetException.PhidgetException:
+            raise
+        return stp
+
+    def setup_motor(self):
+        self.stp.setCurrentLimit(0, 0.80)
+        self.stp.setVelocityLimit(0, 200.)
+        self.stp.setEngaged(0, True)
+        if self._debug: print "SyringeStepper: Motor engaged."
+
+    def isAtEndpoint(self):
+        # inverted logic due to the leftover switch that's being used
+        atEnd = not self.stp.getInputState(0)
+        if self._debug: print "SyringeStepper: Not at Endpoint."
+        return atEnd
+
+    def calibrate(self):
+        if not self.isAtEndpoint():
+            if self._debug: print "SyringeStepper: Calibrating."
+            self.stp.setOnInputChangeHandler(self._calibrate_endpoint)
+            self._CALIB = True
+            self.stp.setTargetPosition(0, self.stp.getPositionMin(0))
+            while self._CALIB:
+                time.sleep(0.1)
+        else:
+            self.start = self.stp.getCurrentPosition(0)
+
+    def _calibrate_endpoint(self, caller=None):
+        if self.isAtEndpoint():
+            pos = self.stp.getCurrentPosition(0)
+            self.stp.setTargetPosition(0, pos)
+            self.start = pos
+            self._CALIB = False
+            return
+        else:
+            # leaving the startpos
+            return
+
+    def inject(self, val):
+        cur = self.stp.getCurrentPosition(0)
+        if cur - self.start + val < self.maxpos:
+            self.stp.setTargetPosition(0, cur+val)
+        else:
+            print "Nonono!"
 
 
 
