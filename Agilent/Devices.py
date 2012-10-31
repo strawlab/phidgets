@@ -48,6 +48,44 @@ class AT53220A(_ATBaseLAN):
     """
     DEVSTR = '53220A'
 
+    def input(self, channel, coupling='DC', filter_=False, impedance=50, 
+            noisereject=False, probe=1):
+        pass
+
+
+    def input_get(self):
+        ret = {}
+        for inp in ['INP1','INP2']:
+            conf = {'coupling'   : self.SCPI_query_cmd(inp+':COUP?'),
+                    'lpfilter'   : self.SCPI_query_cmd(inp+':FILT?'),
+                    'impedance'  : self.SCPI_query_cmd(inp+':IMP?'),
+                    'level'      :(self.SCPI_query_cmd(inp+':LEV1?'),
+                                   self.SCPI_query_cmd(inp+':LEV2?')),
+                    'nreject'    : self.SCPI_query_cmd(inp+':NREJ?'),
+                    'probe'      : self.SCPI_query_cmd(inp+':PROB?'),
+                    'protection' : self.SCPI_query_cmd(inp+':PROT?'),
+                    'range'      : self.SCPI_query_cmd(inp+':RANG?'),
+                    'slope'      :(self.SCPI_query_cmd(inp+':SLOP1?'),
+                                   self.SCPI_query_cmd(inp+':SLOP2?')) }
+            ret[inp] = conf
+        return ret
+
+    def display_text(self, msg):
+        self.SCPI_send_cmd('DISP:TEXT "%s"' % msg.replace("'",''))
+
+    def display_mode(self, mode='numeric'):
+        """
+        numeric,
+        histogram,
+        tchart
+        """
+        self.SCPI_send_cmd('DISP:MODE %s' % str(mode))
+
+    def display_enable(self, state):
+        state = ['OFF', 'ON'][bool(state)]
+        self.SCPI_send_cmd('DISP %s' % state)
+
+        
 
 class AT34410A(_ATBaseLAN):
     """
