@@ -126,8 +126,8 @@ class SyringeStepper(object):
         return stp
 
     def setup_motor(self):
-        self.stp.setCurrentLimit(0, 0.80)
-        self.stp.setVelocityLimit(0, 200.)
+        self.stp.setCurrentLimit(0, 0.84)
+        self.stp.setVelocityLimit(0, 100.)
         self.stp.setEngaged(0, True)
         if self._debug: print "SyringeStepper: Motor engaged."
 
