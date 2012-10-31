@@ -134,7 +134,8 @@ class SyringeStepper(object):
     def isAtEndpoint(self):
         # inverted logic due to the leftover switch that's being used
         atEnd = not self.stp.getInputState(0)
-        if self._debug: print "SyringeStepper: Not at Endpoint."
+        if self._debug: print "SyringeStepper: %sat Endpoint." % (
+                                              ['not ',''][atEnd] )
         return atEnd
 
     def calibrate(self):
