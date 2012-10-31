@@ -19,7 +19,7 @@ class _ATBaseLAN(object):
         if self._debug:
             print 'Connected to:\n   ', ident
         if hasattr(self, 'DEVSTR'):
-            if self._DNUM != '53220A':
+            if self._DNUM != self.DEVSTR:
                 raise AgilentDeviceError('Wrong Agilent device! '
                                  'Connected to a %s' % self._DNUM)
 
