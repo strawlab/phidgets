@@ -55,10 +55,10 @@ class AT53220A(_ATBaseLAN):
     """
     DEVSTR = '53220A'
 
-    def input(self, channel, coupling='DC', filter_=False, impedance=50, 
-            noisereject=False, probe=1):
-        pass
-
+    def input(self, channel, coupling='AC', filter_=False, impedance=1.0e6, 
+                autolevel=True, level=(None,None), nreject=False,
+                probe='DEF', protection=False, range_='DEF', slope='POS'):
+        raise NotImplementedError('yet') 
 
     def input_get(self):
         ret = {}
@@ -66,6 +66,7 @@ class AT53220A(_ATBaseLAN):
             conf = {'coupling'   : self.SCPI_query_cmd(inp+':COUP?'),
                     'lpfilter'   : self.SCPI_query_cmd(inp+':FILT?'),
                     'impedance'  : self.SCPI_query_cmd(inp+':IMP?'),
+                    'autolevel'  : self.SCPI_query_cmd(inp+':LEV:AUTO?'),
                     'level'      :(self.SCPI_query_cmd(inp+':LEV1?'),
                                    self.SCPI_query_cmd(inp+':LEV2?')),
                     'nreject'    : self.SCPI_query_cmd(inp+':NREJ?'),
