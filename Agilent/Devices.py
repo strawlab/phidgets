@@ -108,6 +108,16 @@ class AT53220A(_ATBaseLAN):
             return data if data_only else "".join([str(nX),str(nData),data])
 
 
+
+    def read(self):
+        return self.SCPI_query_cmd('READ?')
+
+    def fetch(self):
+        return self.SCPI_query_cmd('FETC?')
+
+    def abort(self)
+        return self.SCPI_send_cmd('ABOR')
+
     def display_text(self, msg):
         self.SCPI_send_cmd('DISP:TEXT "%s"' % msg.replace("'",''))
 
