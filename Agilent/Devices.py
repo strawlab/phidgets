@@ -87,6 +87,7 @@ class AT53220A(_ATBaseLAN):
         histogram,
         tchart
         """
+        self.SCPI_send_cmd('DISP:TEXT:CLE')
         self.SCPI_send_cmd('DISP:MODE %s' % str(mode))
 
     def display_enable(self, state):
