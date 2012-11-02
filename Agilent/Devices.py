@@ -1,5 +1,6 @@
 
 import SCPI as _SCPI
+import numpy as _np
 
 class AgilentDeviceError(RuntimeError):
     pass
@@ -117,7 +118,7 @@ class AT53220A(_ATBaseLAN):
             if END != "\n":
                 raise RuntimeError("Booo! Bad!")
             
-            return ''.join(recv_buff)
+            return _np.fromstring(''.join(recv_buff), dtype=_np.float64, sep=',')
 
 
 
