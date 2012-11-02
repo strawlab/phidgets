@@ -24,14 +24,14 @@ class _ATBaseLAN(object):
                 raise AgilentDeviceError('Wrong Agilent device! '
                                  'Connected to a %s' % self._DNUM)
 
-    def SCPI_send_cmd(self, cmd):
+    def SCPI_send_cmd(self, cmd, check=True):
         self._SCPI.send('%s\n' % str(cmd))
-        self._check_error()
+        if bool(check): self._check_error()
         return
 
-    def SCPI_query_cmd(self, cmd):
+    def SCPI_query_cmd(self, cmd, check=True):
         answer = self._SCPI.query('%s\n' % str(cmd))
-        self._check_error()
+        if bool(check): self._check_error()
         return answer
     
     def _print_debug(self, msg):
@@ -87,7 +87,7 @@ class AT53220A(_ATBaseLAN):
         #self.SCPI_send_cmd('FORM:DATA ASC,15')
         
         # check if there is Data!
-        if int(self.SCPI_query_cmd('DATA:POIN?')) < 1:
+        if int(self.SCPI_query_cmd('DATA:POIN?', False)) < 1:
             return None
         
         cmd = "R?\n" if max_count is None else "R? %d\n" % int(max_count)
