@@ -79,7 +79,7 @@ class AT53220A(_ATBaseLAN):
         return ret
 
 
-    def r_g(self, max_count=None, data_only=False):
+    def r_g(self, max_count=None):
         """
         R? [<max_count>]
         """
