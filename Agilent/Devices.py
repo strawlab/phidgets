@@ -146,7 +146,7 @@ class AT53220A(_ATBaseLAN):
     def fetch(self):
         return self.SCPI_query_cmd('FETC?')
 
-    def abort(self)
+    def abort(self):
         return self.SCPI_send_cmd('ABOR')
 
     def display_text(self, msg):
