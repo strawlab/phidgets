@@ -7,7 +7,7 @@ class AgilentDeviceError(RuntimeError):
 
 class _ATBaseLAN(object):
 
-    def __init__(self, hostname, debug=False):
+    def __init__(self, hostname, debug=False, errorchecking=True):
 
         self._debug = bool(debug)
         self._debug_verbose = debug > 1
@@ -25,16 +25,23 @@ class _ATBaseLAN(object):
 
     def SCPI_send_cmd(self, cmd):
         self._SCPI.send('%s\n' % str(cmd))
+        self._check_error()
         return
 
     def SCPI_query_cmd(self, cmd):
         answer = self._SCPI.query('%s\n' % str(cmd))
+        self._check_error()
         return answer
     
     def _print_debug(self, msg):
         if self._debug:
             print 'DBG:%s> %s' % (self._DNUM, str(msg))
 
+    def _check_error(self):
+        answer = self._SCPI.query('SYST:ERR?\n')
+        n, s = answer.split(',', 1) 
+        if int(n) != 0:
+            raise AgilentDeviceError(answer)
 
 
 class AT53220A(_ATBaseLAN):
