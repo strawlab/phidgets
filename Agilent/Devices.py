@@ -78,6 +78,36 @@ class AT53220A(_ATBaseLAN):
             ret[inp] = conf
         return ret
 
+
+    def r_g(self, max_count=None, data_only=False):
+        """
+        R? [<max_count>]
+        """
+        #self.SCPI_send_cmd('FORM:DATA ASC,15')
+        
+        # check if there is Data!
+        if int(self.SCPI_query_cmd('DATA:POIN?')) < 1:
+            return None
+        
+        cmd = "R?\n" if max_count is None else "R? %d\n" % int(max_count)
+        self._SCPI.send(cmd)
+        
+        # now we should get the return message
+        # this should be #XY*data\n
+        nX = int(self._SCPI.socket.recv(2)[-1])
+        if nX < 1:
+            return None
+        
+        else:
+            nData = int(self._SCPI.socket.recv(nX))
+            
+            data = self._SCPI.socket.recv(nData)
+            if self._SCPI.socket.recv(1) != "\n":
+                raise RuntimeError("Booo! Bad!")
+            
+            return data if data_only else "".join([str(nX),str(nData),data])
+
+
     def display_text(self, msg):
         self.SCPI_send_cmd('DISP:TEXT "%s"' % msg.replace("'",''))
 
