@@ -100,12 +100,25 @@ class AT53220A(_ATBaseLAN):
         
         else:
             nData = int(self._SCPI.socket.recv(nX))
-            
-            data = self._SCPI.socket.recv(nData)
-            if self._SCPI.socket.recv(1) != "\n":
+           
+            recv_buff = []
+            while True:
+                
+                if nData < 1:
+                    break
+                _recv_data = self._SCPI.socket.recv(nData)
+                # This is quite mean:
+                #   it can happen, that ...socket.recv(N)
+                #   returns a string with len(str) < N !!!
+                recv_buff.append(_recv_data)
+                nData -= len(_recv_data)
+
+            END = self._SCPI.socket.recv(10)
+            if END != "\n":
                 raise RuntimeError("Booo! Bad!")
             
-            return data if data_only else "".join([str(nX),str(nData),data])
+            return ''.join(recv_buff)
+
 
 
 
