@@ -84,8 +84,6 @@ class AT53220A(_ATBaseLAN):
         """
         R? [<max_count>]
         """
-        #self.SCPI_send_cmd('FORM:DATA ASC,15')
-        
         # check if there is Data!
         if int(self.SCPI_query_cmd('DATA:POIN?', False)) < 1:
             return None
@@ -124,22 +122,29 @@ class AT53220A(_ATBaseLAN):
 
 
 
-    def test(self):
-        self.SCPI_send_cmd('INP1:COUP DC')
-        self.SCPI_send_cmd('INP1:FILT OFF')
-        self.SCPI_send_cmd('INP1:IMP 50')
-        self.SCPI_send_cmd('INP1:LEV:AUTO OFF')
-        self.SCPI_send_cmd('INP1:LEV1 2.2')
-        self.SCPI_send_cmd('INP1:NREJ OFF')
-        self.SCPI_send_cmd('INP1:PROB 1')
-        self.SCPI_send_cmd('INP1:RANG 5.0')
-        self.SCPI_send_cmd('INP1:SLOP1 POS')
-        self.SCPI_send_cmd('FUNC "TOT 1"')
-        self.SCPI_send_cmd('SAMP:COUN 1000000')
-        self.SCPI_send_cmd('TOT:GATE:SOUR TIME')
-        self.SCPI_send_cmd('TOT:GATE:TIME 0.1')
-        self.SCPI_send_cmd('INIT')
+
+    def _test_totalize(self):
+        def setupinput(self):
+            self.SCPI_send_cmd('INP1:COUP DC')
+            self.SCPI_send_cmd('INP1:FILT OFF')
+            self.SCPI_send_cmd('INP1:IMP 50')
+            self.SCPI_send_cmd('INP1:LEV:AUTO OFF')
+            self.SCPI_send_cmd('INP1:LEV1 2.2')
+            self.SCPI_send_cmd('INP1:NREJ OFF')
+            self.SCPI_send_cmd('INP1:PROB 1')
+            self.SCPI_send_cmd('INP1:RANG 5.0')
+            self.SCPI_send_cmd('INP1:SLOP1 POS')
+        def setuptotalize(self):
+            self.SCPI_send_cmd('FUNC "TOT 1"')
+            self.SCPI_send_cmd('SAMP:COUN 1000000')
+            self.SCPI_send_cmd('TOT:GATE:SOUR TIME')
+            self.SCPI_send_cmd('TOT:GATE:TIME 0.1')
+            self.SCPI_send_cmd('INIT')
+        
+        setupinput()
+        setuptotalize()
         self.display_mode('tchart')
+
 
     def read(self):
         return self.SCPI_query_cmd('READ?')
