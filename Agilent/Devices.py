@@ -56,10 +56,20 @@ class AT53220A(_ATBaseLAN):
     """
     DEVSTR = '53220A'
 
-    def input(self, channel, coupling='AC', filter_=False, impedance=1.0e6, 
-                autolevel=True, level=(None,None), nreject=False,
-                probe='DEF', protection=False, range_='DEF', slope='POS'):
-        raise NotImplementedError('yet') 
+    def input(self, channel, coupling='AC', filter_='OFF', impedance=1.0e6, 
+                autolevel='ON', level=('DEF','DEF'), nreject='OFF',
+                probe='DEF', range_='DEF', slope='POS'):
+        
+        self.SCPI_send_cmd('INP%d:COUP %s' % (channel, coupling))     
+        self.SCPI_send_cmd('INP%d:FILT %s' % (channel, filter_))     
+        self.SCPI_send_cmd('INP%d:IMP %s'  % (channel, impedance))     
+        self.SCPI_send_cmd('INP%d:LEV:AUTO %s' % (channel, autolevel))     
+        self.SCPI_send_cmd('INP%d:LEV1 %s' % (channel, str(level[0])))     
+        self.SCPI_send_cmd('INP%d:LEV2 %s' % (channel, str(level[1])))     
+        self.SCPI_send_cmd('INP%d:NREJ %s' % (channel, nreject))     
+        self.SCPI_send_cmd('INP%d:RANG %s' % (channel, range_))     
+        self.SCPI_send_cmd('INP%d:SLOP %s' % (channel, slope))     
+
 
     def input_get(self):
         ret = {}
