@@ -108,7 +108,7 @@ class SyringeStepper(object):
         self.setup_motor()
 
         self.maxpos = 8600
-
+        self._CALIB = False
         self.calibrate()
 
     def _connect_phidget(self, serial): #, host): not used yet
@@ -139,15 +139,16 @@ class SyringeStepper(object):
         return atEnd
 
     def calibrate(self):
+        self._CALIB = True
         if not self.isAtEndpoint():
             if self._debug: print "SyringeStepper: Calibrating."
             self.stp.setOnInputChangeHandler(self._calibrate_endpoint)
-            self._CALIB = True
             self.stp.setTargetPosition(0, self.stp.getPositionMin(0))
             while self._CALIB:
                 time.sleep(0.1)
         else:
             self.start = self.stp.getCurrentPosition(0)
+            self._CALIB = False
 
     def _calibrate_endpoint(self, caller=None):
         if self.isAtEndpoint():
