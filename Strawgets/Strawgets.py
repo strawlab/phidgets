@@ -167,5 +167,8 @@ class SyringeStepper(object):
         else:
             raise RuntimeError("SyringeStepper: Can't go that far!")
 
-
+    def isAtTargetPos(self):
+        cur = self.stp.getCurrentPosition(0)
+        tar = self.stp.getTargetPosition(0)
+        return cur == tar
 
