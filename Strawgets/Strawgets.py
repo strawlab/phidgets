@@ -160,7 +160,15 @@ class SyringeStepper(object):
             # leaving the startpos
             return
 
+    def _nonlinearCorrection(self, ml):
+        # The Pump has to be calibrated in this function
+        # quick and dirty for now:
+        # start = 0 > 0.385ml
+        # endpt = 8599 > 0.0ml
+        return int(ml*8599/0.385)
+
     def inject(self, val):
+        val = self._nonlinearCorrection(val)
         cur = self.stp.getCurrentPosition(0)
         if cur - self.start + val < self.maxpos:
             self.stp.setTargetPosition(0, cur+val)
