@@ -165,7 +165,7 @@ class SyringeStepper(object):
         if cur - self.start + val < self.maxpos:
             self.stp.setTargetPosition(0, cur+val)
         else:
-            print "Nonono!"
+            raise RuntimeError("SyringeStepper: Can't go that far!")
 
 
 
