@@ -178,5 +178,5 @@ class SyringeStepper(object):
     def isAtTargetPos(self):
         cur = self.stp.getCurrentPosition(0)
         tar = self.stp.getTargetPosition(0)
-        return cur == tar
+        return cur - tar
 
