@@ -1,6 +1,6 @@
 # Strawgets
 
-python wrappers classes for Phidgets
+python wrapper classes for Phidgets
 
 # OceanOptics
 
@@ -10,4 +10,7 @@ python class for OceanOptics Spectrometre
 
 python class for VoltCraft Power Supplies
 
+# Agilent
+
+python class for Agilent Devices (Network Communication)
 
