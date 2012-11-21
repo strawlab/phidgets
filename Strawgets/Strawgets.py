@@ -107,7 +107,7 @@ class SyringeStepper(object):
         # connect callbacks
         self.setup_motor()
 
-        self.maxpos = 8600
+        self.maxpos = 340362
         self._CALIB = False
         self.calibrate()
 
@@ -126,8 +126,8 @@ class SyringeStepper(object):
         return stp
 
     def setup_motor(self):
-        self.stp.setCurrentLimit(0, 0.84)
-        self.stp.setVelocityLimit(0, 100.)
+        self.stp.setCurrentLimit(0, 1.68)
+        self.stp.setVelocityLimit(0, 20000.)
         self.stp.setEngaged(0, True)
         if self._debug: print "SyringeStepper: Motor engaged."
 
@@ -166,7 +166,7 @@ class SyringeStepper(object):
         # quick and dirty for now:
         # start = 0 > 0.385ml
         # endpt = 8599 > 0.0ml
-        return int(ml*8599/0.385)
+        return int(ml*(self.maxpos-1)/0.36)
 
     def inject(self, val):
         val = self._nonlinearCorrection(val)
