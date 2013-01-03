@@ -1,0 +1,6 @@
+# custom rules for the voltcraft powersupplies
+# MUHAHAHAHAHAHAHA!
+#
+
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", PROGRAM="/usr/bin/vcpps_namer.py %k", SYMLINK+="%c", GROUP="plugdev"
+
