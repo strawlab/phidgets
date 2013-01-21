@@ -125,7 +125,7 @@ class AT53220A(_ATBaseLAN):
                 recv_buff.append(_recv_data)
                 nData -= len(_recv_data)
 
-            END = self._SCPI.socket.recv(10)
+            END = self._SCPI.socket.recv(1)
             if END != "\n":
                 raise RuntimeError("Booo! Bad!")
            
