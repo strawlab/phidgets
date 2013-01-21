@@ -201,4 +201,6 @@ class AT34410A(_ATBaseLAN):
     """
     DEVSTR = '34410A'
 
+    def _temporary_resistance(self):
+        return self.SCPI_query_cmd('MEAS:RES?')
 
