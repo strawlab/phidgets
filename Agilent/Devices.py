@@ -90,10 +90,13 @@ class AT53220A(_ATBaseLAN):
         return ret
 
 
-    def r_g(self, max_count=None):
+    def r_g(self, max_count=None, format_='ascii', byteorder='>'):
         """
         R? [<max_count>]
         """
+        assert format_.lower() in ['ascii', 'real'], 'use format ascii or real'
+        assert byteorder in ['>', '<'], ('specify ">" big endian (NORM)'
+                                          ' or "<" little endian (SWAP)')
         # check if there is Data!
         if int(self.SCPI_query_cmd('DATA:POIN?', False)) < 1:
             return None
@@ -125,10 +128,14 @@ class AT53220A(_ATBaseLAN):
             END = self._SCPI.socket.recv(10)
             if END != "\n":
                 raise RuntimeError("Booo! Bad!")
-            
-            return _np.fromstring(''.join(recv_buff), dtype=_np.float64, sep=',')
-
-
+           
+            if format_ == 'ascii':
+                return _np.fromstring(''.join(recv_buff), dtype=_np.float64, sep=',')
+    
+            else:
+                dt = _np.dtype(_np.float64).newbyteorder(byteorder)
+                return _np.frombuffer(''.join(recv_buff), dtype=dt)
+                
 
 
 
